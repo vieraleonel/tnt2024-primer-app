@@ -1,58 +1,49 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { Text, View, StyleSheet } from "react-native";
+import Contants from "expo-constants";
+import { StatusBar } from "expo-status-bar";
+import { Fragment } from "react";
 
-import { useColorScheme } from '@/components/useColorScheme';
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+const App = () => {
+  return (
+    <Fragment>
+      <StatusBar style="light" />
+      <View style={{ backgroundColor: "#484747", flex: 1 }}>
+        <View style={{ height: Contants.statusBarHeight }} />
+        <View>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            <Text style={styles.textBase}>All Movies</Text>
+            <Text style={styles.textBase}>For Kids</Text>
+            <View>
+              <View
+                style={{
+                  position: "absolute",
+                  height: 15,
+                  width: 15,
+                  right: -7,
+                  top: -12,
+                  borderRadius: 50,
+                  backgroundColor: "#FC1E1E",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={[styles.textBase, { fontSize: 10 }]}>2</Text>
+              </View>
+              <Text style={styles.textBase}>My Tickets</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </Fragment>
+  );
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const styles = StyleSheet.create({
+  textBase: {
+    color: "white",
+  },
+});
 
-export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
-  );
-}
+export default App;
