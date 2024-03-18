@@ -2,6 +2,7 @@ import { Text, View, StyleSheet } from "react-native";
 import Contants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
 import { Fragment } from "react";
+import { Image } from "expo-image";
 
 const App = () => {
   return (
@@ -34,6 +35,10 @@ const App = () => {
               <Text style={styles.textBase}>My Tickets</Text>
             </View>
           </View>
+          <Image
+            source={require("@/assets/images/batman.png")}
+            style={{ width: 100, height: 100 }}
+          />
         </View>
       </View>
     </Fragment>
