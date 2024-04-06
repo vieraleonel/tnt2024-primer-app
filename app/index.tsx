@@ -7,7 +7,6 @@ import {
   FlatList,
   Pressable,
 } from "react-native";
-import Contants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
 import { ImageBackground } from "expo-image";
 import { AntDesign } from "@expo/vector-icons";
@@ -18,6 +17,7 @@ import { getCategories } from "@/src/service/category.service";
 import { getMovies } from "@/src/service/movie.service";
 import { MovieCard } from "@/src/components/MovieCard";
 import { commonStyles } from "@/src/theme/common";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 
 const orange = "#D98639";
@@ -28,7 +28,7 @@ const App = () => {
   const router = useRouter();
 
   const goToSubCategoryPage = () => {
-    router.push("/categories/123/456");
+    router.push("/categories/123");
   };
   return (
     <View style={{ backgroundColor: "#1E1F27", flex: 1 }}>
@@ -40,7 +40,7 @@ const App = () => {
           <Link href="/about" asChild>
             <Text style={commonStyles.textBase}>about</Text>
           </Link>
-          <Link href="/movies/456" asChild>
+          <Link href="/movies/456?nombre=untdf" asChild>
             <Text style={commonStyles.textBase}>Movie Show</Text>
           </Link>
           <Pressable onPress={goToSubCategoryPage}>
@@ -59,7 +59,7 @@ const App = () => {
             >
               <Text style={[commonStyles.textBase, { fontSize: 10 }]}>2</Text>
             </View>
-            <Text style={commonStyles.textBase}>SubCategories</Text>
+            <Text style={commonStyles.textBase}>Category</Text>
           </Pressable>
         </View>
         <Text style={styles.sectionHeader}>Coming Soon</Text>
