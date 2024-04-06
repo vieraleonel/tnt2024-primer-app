@@ -18,13 +18,12 @@ import { getCategories } from "@/src/service/category.service";
 import { getMovies } from "@/src/service/movie.service";
 import { MovieCard } from "@/src/components/MovieCard";
 import { commonStyles } from "@/src/theme/common";
-import { Link, Stack, useRouter } from "expo-router";
+import { useState } from "react";
 
 const orange = "#D98639";
 
 const App = () => {
   const { width } = useWindowDimensions();
-  const categories = getCategories();
   const movies = getMovies();
   const router = useRouter();
 
@@ -117,11 +116,7 @@ const App = () => {
         </ImageBackground>
       </View>
       <View style={{ height: 20 }} />
-      <ScrollView horizontal style={{ maxHeight: 30 }}>
-        {categories.map((category) => (
-          <CategoryBadge key={category.id} category={category} />
-        ))}
-      </ScrollView>
+      <CategoryList />
       <View style={{ height: 20 }} />
       <Text style={[styles.sectionHeader, { paddingHorizontal: 30 }]}>
         Now Showing
@@ -137,6 +132,36 @@ const App = () => {
         keyExtractor={(item) => item.title}
       />
     </View>
+  );
+};
+
+const CategoryList = () => {
+  let categories = getCategories().map((category) => {
+    return { ...category, active: false };
+  });
+
+  const [dynamicCategories, setDynamicCategories] = useState(categories);
+
+  return (
+    <ScrollView horizontal style={{ maxHeight: 30 }}>
+      {dynamicCategories.map((category) => (
+        <Pressable
+          key={category.id}
+          onPress={() => {
+            // const newCategories = dynamicCategories.map((c) => ({
+            //   ...c,
+            //   active: c.id === category.id,
+            // }));
+            const newCategories = dynamicCategories.map((c) => {
+              return { ...c, active: c.id === category.id };
+            });
+            setDynamicCategories(newCategories);
+          }}
+        >
+          <CategoryBadge category={category} />
+        </Pressable>
+      ))}
+    </ScrollView>
   );
 };
 
