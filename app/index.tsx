@@ -23,13 +23,13 @@ import { useState } from "react";
 const orange = "#D98639";
 
 const App = () => {
-  const { width } = useWindowDimensions();
   const movies = getMovies();
   const router = useRouter();
 
   const goToSubCategoryPage = () => {
     router.push("/categories/123");
   };
+  console.log("App");
   return (
     <View style={{ backgroundColor: "#1E1F27", flex: 1 }}>
       {/* <Stack.Screen options={{ title: "PORTADA", headerShown: false }} /> */}
@@ -37,6 +37,9 @@ const App = () => {
       <View style={{ height: 90 }} />
       <View style={{ paddingHorizontal: 30, gap: 20 }}>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+          <Link href="/state" asChild>
+            <Text style={commonStyles.textBase}>state</Text>
+          </Link>
           <Link href="/about" asChild>
             <Text style={commonStyles.textBase}>about</Text>
           </Link>
@@ -62,58 +65,9 @@ const App = () => {
             <Text style={commonStyles.textBase}>Category</Text>
           </Pressable>
         </View>
+        <CuadradoPressable />
         <Text style={styles.sectionHeader}>Coming Soon</Text>
-        <ImageBackground
-          source={require("@/assets/images/batman.png")}
-          style={{
-            width: width - 60,
-            height: (width - 60) / 1.6,
-            borderRadius: 10,
-            justifyContent: "space-between",
-            padding: 15,
-          }}
-          contentFit="cover"
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={commonStyles.textBase}>The Batman</Text>
-            <AntDesign name="sharealt" size={24} color="white" />
-          </View>
-
-          <View
-            style={{
-              width: 34,
-              height: 34,
-              backgroundColor: orange,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 50,
-              paddingLeft: 4,
-              alignSelf: "center",
-            }}
-          >
-            <FontAwesome name="play" size={20} color="white" />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              gap: 5,
-            }}
-          >
-            <MaterialCommunityIcons
-              name="ticket-confirmation-outline"
-              size={24}
-              color="white"
-            />
-            <Text style={commonStyles.textBase}>Tickets Available</Text>
-          </View>
-        </ImageBackground>
+        <FeaturedMovieCard />
       </View>
       <View style={{ height: 20 }} />
       <CategoryList />
@@ -135,6 +89,64 @@ const App = () => {
   );
 };
 
+const FeaturedMovieCard = () => {
+  const { width } = useWindowDimensions();
+  console.log("FeatureImage");
+  return (
+    <ImageBackground
+      source={require("@/assets/images/batman.png")}
+      style={{
+        width: width - 60,
+        height: (width - 60) / 1.6,
+        borderRadius: 10,
+        justifyContent: "space-between",
+        padding: 15,
+      }}
+      contentFit="cover"
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text style={commonStyles.textBase}>The Batman</Text>
+        <AntDesign name="sharealt" size={24} color="white" />
+      </View>
+
+      <View
+        style={{
+          width: 34,
+          height: 34,
+          backgroundColor: orange,
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: 50,
+          paddingLeft: 4,
+          alignSelf: "center",
+        }}
+      >
+        <FontAwesome name="play" size={20} color="white" />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          gap: 5,
+        }}
+      >
+        <MaterialCommunityIcons
+          name="ticket-confirmation-outline"
+          size={24}
+          color="white"
+        />
+        <Text style={commonStyles.textBase}>Tickets Available</Text>
+      </View>
+    </ImageBackground>
+  );
+};
+
 const CategoryList = () => {
   let categories = getCategories().map((category) => {
     return { ...category, active: false };
@@ -142,26 +154,50 @@ const CategoryList = () => {
 
   const [dynamicCategories, setDynamicCategories] = useState(categories);
 
+  // function handlePressCategory(catId: number) {
+  //   console.log("handlePressCategory");
+  //   function handlePressInner() {
+  //     const newCategories = dynamicCategories.map((c) => {
+  //       return { ...c, active: c.id === catId };
+  //     });
+  //     setDynamicCategories(newCategories);
+  //   }
+  //   return handlePressInner;
+  // }
+
+  const handlePressCategory = (catId: number) => () => {
+    console.log("handlePressCategory");
+    const newCategories = dynamicCategories.map((c) => {
+      return { ...c, active: c.id === catId };
+    });
+    setDynamicCategories(newCategories);
+  };
+
+  console.log("CategoryList");
   return (
     <ScrollView horizontal style={{ maxHeight: 30 }}>
       {dynamicCategories.map((category) => (
-        <Pressable
-          key={category.id}
-          onPress={() => {
-            // const newCategories = dynamicCategories.map((c) => ({
-            //   ...c,
-            //   active: c.id === category.id,
-            // }));
-            const newCategories = dynamicCategories.map((c) => {
-              return { ...c, active: c.id === category.id };
-            });
-            setDynamicCategories(newCategories);
-          }}
-        >
+        <Pressable key={category.id} onPress={handlePressCategory(category.id)}>
           <CategoryBadge category={category} />
         </Pressable>
       ))}
     </ScrollView>
+  );
+};
+
+const CuadradoPressable = () => {
+  const [activo, setActivo] = useState(false);
+  console.log("CuadradoPressable");
+  return (
+    <Pressable onPress={() => setActivo(!activo)}>
+      <View
+        style={{
+          backgroundColor: activo ? "red" : "blue",
+          width: 30,
+          height: 30,
+        }}
+      />
+    </Pressable>
   );
 };
 
